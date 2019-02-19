@@ -1,0 +1,30 @@
+language: python
+versions:
+  - "3.7"
+cache: pip
+sudo: required
+services:
+  - docker
+
+env:
+  - MOLECULE_SCENARIO=cent7
+  - MOLECULE_SCENARIO=fedora
+  - MOLECULE_SCENARIO=ubuntu18
+  - MOLECULE_SCENARIO=ubuntu
+
+install:
+  - pip install -U pip
+  - pip --version
+  - pip install ansible ansible-lint yamllint flake8 molecule docker
+  - ansible --version
+  - ansible-lint --version
+  - yamllint --version
+  - flake8 --version
+  - molecule --version
+
+script:
+  - molecule test -s "${MOLECULE_SCENARIO}"
+  - flake8 $(find . -name '*.py')
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

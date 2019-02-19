@@ -1,0 +1,28 @@
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  options:
+    config-file: tests/yamllint.yml
+platforms:
+  - name: virtualenv_ansible_python
+    image: centos:7
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: ../shared/prepare.yml
+    converge: ../shared/playbook.yml
+scenario:
+  name: cent7
+verifier:
+  name: testinfra
+  options:
+    v: true
+  lint:
+    name: flake8
+  additional_files_or_dirs:
+    - ../shared/*
