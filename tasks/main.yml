@@ -26,6 +26,12 @@
   register: virtualenv_tempdir
   changed_when: false
 
+- name: set read/exec permissions on virtualenv tempdir
+  file:
+    path: "{{ virtualenv_tempdir.path }}"
+    state: directory
+    mode: "0755"
+
 - name: install the latest pip
   pip:
     name:
