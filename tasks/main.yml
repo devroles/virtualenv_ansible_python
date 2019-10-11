@@ -57,6 +57,7 @@
   pip:
     name: "{{ virtualenv_ansible_python_packages }}"
     virtualenv: "{{ virtualenv_ansible_python_dir }}"
+    extra_args: "-U"
   retries: 2
   register: install_pip_packages
   until: install_pip_packages is success
