@@ -1,3 +1,5 @@
 virtualenv_ansible_python_system_packages:
   - python-virtualenv
   - python-setuptools
+  - python3-venv
+  - python3-setuptools
