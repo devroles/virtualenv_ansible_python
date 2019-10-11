@@ -20,15 +20,21 @@
   register: install_system_packages
   until: install_system_packages is success
 
-- name: create a virtualenv tempdir
-  tempfile:
-    state: directory
-  register: virtualenv_tempdir
-  changed_when: false
+- block:
+    - name: create a virtualenv tempdir
+      tempfile:
+        state: directory
+      register: virtualenv_tempdir
+      changed_when: false
 
-- name: set read/exec permissions on virtualenv tempdir
+    - name: set virtualenv dir
+      set_fact:
+        virtualenv_ansible_python_dir: "{{ virtualenv_tempdir.path }}"
+  when: virtualenv_ansible_python_dir is undefined
+
+- name: set read/exec permissions on virtualenv dir
   file:
-    path: "{{ virtualenv_tempdir.path }}"
+    path: "{{ virtualenv_ansible_python_dir }}"
     state: directory
     mode: "0755"
 
@@ -39,7 +45,7 @@
       - setuptools
     extra_args: "-U"
     virtualenv_site_packages: "{{ virtualenv_ansible_python_site_packages }}"
-    virtualenv: "{{ virtualenv_tempdir.path }}"
+    virtualenv: "{{ virtualenv_ansible_python_dir }}"
     virtualenv_command: "{{ virtualenv_ansible_python_virtualenv_command
       | default(omit) }}"
   retries: 2
@@ -50,7 +56,7 @@
 - name: install pip packages
   pip:
     name: "{{ virtualenv_ansible_python_packages }}"
-    virtualenv: "{{ virtualenv_tempdir.path }}"
+    virtualenv: "{{ virtualenv_ansible_python_dir }}"
   retries: 2
   register: install_pip_packages
   until: install_pip_packages is success
@@ -58,4 +64,4 @@
 
 - name: update ansible_python_interpreter here
   set_fact:
-    ansible_python_interpreter: "{{ virtualenv_tempdir.path }}/bin/python"
+    ansible_python_interpreter: "{{ virtualenv_ansible_python_dir }}/bin/python"

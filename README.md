@@ -33,6 +33,9 @@ Currently the following variables are supported:
   be created with all the system packages already present. Usually this is a good thing, and is very
   important on RHEL/CentOS/Fedora systems when SELinux is eanbled, as the Python libselinux bindings
   are not easily installed into a virtualenv otherwise.
+* `virtualenv_ansible_python_dir` - Leave this blank if you want this role to create a new tempdir
+  version of Python to hold the virtualenv. If you want to use an existing virtualenv or a pre-determined
+  path to the executable, then you can specify this as the root of the virtualenv to be created
 * `virtualenv_ansible_python_original_interpreter` - this is not an input variable but will contain
   the path to the original Python interpreter that was executing modules coming into this role. So this
   is more of an output/return type of variable
